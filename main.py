@@ -44,20 +44,25 @@ def color_match(img_path):
     img = np.invert(img)
     fimg = np.zeros_like(img)
     fimg[img >= 230] = 255
-    #show_image(cv2.imread(img_path, cv2.IMREAD_COLOR))
-    #show_image(fimg)
+    show_image(cv2.imread(img_path, cv2.IMREAD_COLOR))
+    show_image(fimg)
+    
     center = get_center_of_mass(fimg)
 
-    img = cv2.imread(img_path, cv2.IMREAD_COLOR)
-    print(center)
-    cv2.circle(img, center, ball_size_px, (0, 255, 0), 2)
-    show_image(img)
-    return
+    if center is not None:
+        img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+        print(center)
+        cv2.circle(img, center, ball_size_px, (0, 255, 0), 2)
+        show_image(img)
+        return center
+    else:
+        return None
 
 def get_center_of_mass(img):
     posns = np.where(img == 255)
-    return (int(np.mean(posns[1])), int(np.mean(posns[0])))
-    
+    if len(posns[0]) != 0:
+        return (int(np.mean(posns[1])), int(np.mean(posns[0])))
+    return None
 
 
 
@@ -125,8 +130,9 @@ Place ball at certain points on the table to callibrate color.
 """
 
 if __name__ == '__main__':
-    #for i in range(0, 500, 10):
-        #color_match('frame{}.jpg'.format(i))
+    for i in range(0, 500, 10):
+        print(i)
+        color_match('frame{}.jpg'.format(i))
 
     for i in range(4):
         color_match('table_test{}.jpg'.format(i))
